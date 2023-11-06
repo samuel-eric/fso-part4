@@ -33,9 +33,23 @@ const mostBlogs = (blogs) => {
 	return counts[0]
 }
 
+const mostLikes = (blogs) => {
+	let counts = lodash.groupBy(blogs, 'author')
+	let temp = []
+	Object.keys(counts).forEach((key) => {
+		temp.push({
+			author: key,
+			likes: counts[key].reduce((sum, item) => sum + item.likes, 0),
+		})
+	})
+	counts = lodash.orderBy(temp, ['likes', 'author'], ['desc', 'asc'])
+	return counts[0]
+}
+
 module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
 	mostBlogs,
+	mostLikes,
 }
