@@ -26,6 +26,11 @@ test('number of blogs returned is the same as initialBlogs length', async () => 
 	expect(response.body.length).toBe(helper.initialBlogs.length)
 })
 
+test('there is property named id in blog post', async () => {
+	const response = await api.get('/api/blogs')
+	expect(response.body[0].id).toBeDefined()
+})
+
 afterAll(async () => {
 	await mongoose.connection.close()
 })
