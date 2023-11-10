@@ -70,6 +70,38 @@ test('a blog can be added without input for like property', async () => {
 	expect(blogsAtEnd.find((blog) => blog.title === newBlog.title).likes).toBe(0)
 })
 
+describe('a blog can not be added without title or url', () => {
+	test('without title', async () => {
+		const newBlog = {
+			author: 'author without title',
+			url: 'https://newblog.com',
+			likes: 7,
+		}
+
+		await api.post('/api/blogs').send(newBlog).expect(400)
+
+		const blogsAtEnd = await helper.blogsInDB()
+		const authors = blogsAtEnd.map((blog) => blog.author)
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+		expect(authors).not.toContain(newBlog.author)
+	})
+
+	test('without url', async () => {
+		const newBlog = {
+			title: 'new blog without url',
+			author: 'author without url',
+			likes: 7,
+		}
+
+		await api.post('/api/blogs').send(newBlog).expect(400)
+
+		const blogsAtEnd = await helper.blogsInDB()
+		const titles = blogsAtEnd.map((blog) => blog.title)
+		expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+		expect(titles).not.toContain(newBlog.title)
+	})
+})
+
 afterAll(async () => {
 	await mongoose.connection.close()
 })
